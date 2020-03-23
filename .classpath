@@ -35,5 +35,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="E:/Minecraft/Bukkit Plugin Dev/ActionBarAPI-1.5.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Yanic Gottardi/Documents/GitHub/klplugin/dependencies/StockAPI.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
