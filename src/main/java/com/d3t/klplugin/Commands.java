@@ -12,6 +12,8 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.util.Vector;
 
+import com.d3t.klplugin.stocks.StockMarketHandler;
+
 import net.milkbowl.vault.economy.EconomyResponse;
 
 public class Commands {
@@ -167,6 +169,13 @@ public class Commands {
 				calcPlayerVelocities(args[0], multiplier);
 			} else {
 				sender.sendMessage("§cNot enough args!");
+			}
+		} else if(c.equalsIgnoreCase("stockinfo")) {
+			if(args.length > 0) {
+				StockMarketHandler.requestStockInfo(args[0], sender);
+			} else {
+				sender.sendMessage("§cCompany symbol required!");
+				return false;
 			}
 		}
 		if(parseError) sender.sendMessage("§cExecution failed");
