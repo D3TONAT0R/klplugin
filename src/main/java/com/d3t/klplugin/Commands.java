@@ -12,6 +12,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.util.Vector;
 
+import com.d3t.klplugin.stocks.StockData;
 import com.d3t.klplugin.stocks.StockMarketHandler;
 
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -55,7 +56,7 @@ public class Commands {
 					server.broadcastMessage("§8Command block error (cmdblockop)!");
 					return false;
 				}
-				OfflinePlayer p = KLPlugin.INSTANCE.getOfflinePlayer(args[0]);
+				OfflinePlayer p = KLPlugin.getOfflinePlayer(args[0]);
 				if(p != null) {
 					boolean op = args[1].equalsIgnoreCase("true");
 					if(p.isOp() != op) {
@@ -83,7 +84,7 @@ public class Commands {
 				return false;
 			} else {
 				int amount = ParseInt(args[2], sender);
-				OfflinePlayer player = KLPlugin.INSTANCE.getOfflinePlayer(args[0]);
+				OfflinePlayer player = KLPlugin.getOfflinePlayer(args[0]);
 				if(player != null) {
 					return GiveImmoPoints(sender, player, args[1], amount);
 				}
@@ -97,10 +98,10 @@ public class Commands {
 				ArgCountError(sender, args.length, 2);
 				return false;
 			} else {
-				OfflinePlayer offlinePlayer = KLPlugin.INSTANCE.getOfflinePlayer(args[0]);
+				OfflinePlayer offlinePlayer = KLPlugin.getOfflinePlayer(args[0]);
 				int amount = ParseInt(args[1], sender);
 				if(offlinePlayer != null) {
-					TradeImmoPoints(KLPlugin.INSTANCE.toOnlinePlayer(KLPlugin.INSTANCE.getOfflinePlayer(sender.getName())), offlinePlayer, amount);
+					TradeImmoPoints(KLPlugin.toOnlinePlayer(KLPlugin.getOfflinePlayer(sender.getName())), offlinePlayer, amount);
 					return true;
 				}
 			}
@@ -173,9 +174,49 @@ public class Commands {
 		} else if(c.equalsIgnoreCase("stockinfo")) {
 			if(args.length > 0) {
 				StockMarketHandler.requestStockInfo(args[0], sender);
+				return true;
 			} else {
 				sender.sendMessage("§cCompany symbol required!");
 				return false;
+			}
+		} else if(c.equalsIgnoreCase("stocks")) {
+			if(sender instanceof Player) {
+				StockData[] d = StockMarketHandler.getStocksForPlayer((OfflinePlayer)sender);
+				if(d != null) {
+					sender.sendMessage("Deine Aktien:");
+					for(int i = 0; i < d.length; i++) {
+						sender.sendMessage("§8"+(i+1)+"§f "+d[i].symbol+"("+d[i].amount+"x) "+d[i].worthAtPurchase+"$");
+					}
+					sender.sendMessage("§8§o(Die Werte beziehen sich auf den Wert beim Zeitpunkt des Kaufs pro Aktie)");
+					sender.sendMessage("§8----------");
+					return true;
+				}
+			} else {
+				System.out.println("Only a player can do this!");
+			}
+		} else if(c.equalsIgnoreCase("buystocks")) {
+			if(sender instanceof Player) {
+				if(args.length >= 2) {
+					int amount = ParseInt(args[1], sender);
+					StockMarketHandler.buyStocks((Player)sender, args[0], amount);
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				System.out.println("Only a player can do this!");
+			}
+		} else if(c.equalsIgnoreCase("sellstocks")) {
+			if(sender instanceof Player) {
+				if(args.length >= 1) {
+					int index = ParseInt(args[0], sender);
+					StockMarketHandler.sellStocks((Player)sender, index);
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				System.out.println("Only a player can do this!");
 			}
 		}
 		if(parseError) sender.sendMessage("§cExecution failed");
@@ -183,7 +224,7 @@ public class Commands {
 	}
 
 	private void Pay(String playerName, double amount) {
-		OfflinePlayer player = KLPlugin.INSTANCE.getOfflinePlayer(playerName);
+		OfflinePlayer player = KLPlugin.getOfflinePlayer(playerName);
 		if (player == null) {
 			KLPlugin.log.info("Failed to get player!");
 			return;
@@ -244,7 +285,7 @@ public class Commands {
 		senderScore.setScore(senderScore.getScore() - amount);
 		sender.sendMessage(String.format("§eDu hast %s Extra-Punkte an %s gegeben.", amount, receiver.getName()));
 		receiverScore.setScore(receiverScore.getScore() + amount);
-		Player onlineReceiver = KLPlugin.INSTANCE.toOnlinePlayer(receiver);
+		Player onlineReceiver = KLPlugin.toOnlinePlayer(receiver);
 		if (onlineReceiver != null) {
 			onlineReceiver
 					.sendMessage(String.format("§eDu hast %s Extra-Punkte von %s erhalten.", amount, sender.getName()));

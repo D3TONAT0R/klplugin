@@ -55,28 +55,28 @@ commands:
       permission: klplugin.calcdemand
       permission-message: You don't have permission to use this command
    immostatus:
-      description: Shows demand and status of Immobilien.
+      description: Shows demand and status of Immobilien
       usage: /<immostatus>
       permission: klplugin.immostatus
       permission-message: You don't have permission to use this command
    modifyrate:
-      description: Modifies a immo rate.
+      description: Modifies a immo rate
       usage: /<modifyrate> [0-4] [0.5-2.0]
       permission: klplugin.immostatus
       permission-message: You don't have permission to use this command
    pvpklasse:
-      description: PVP Klassen selektor.
+      description: PVP Klassen selektor
       usage: /<pvpklasse> [0-2]
       permission: klplugin.pvpklasse
       permission-message: You don't have permission to use this command
       default: true
    isworld:
-      description: Checks if the executor is in the specified world.
+      description: Checks if the executor is in the specified world
       usage: /<isworld> [name]
       permission: klplugin.internalcmds
       permission-message: You don't have permission to use this command
    pvptick:
-      description: Internal PVP game tick.
+      description: Internal PVP game tick
       usage: /<pvptick>
       permission: klplugin.internalcmds
       permission-message: You don't have permission to use this command
@@ -86,12 +86,27 @@ commands:
       permission: klplugin.internalcmds
       permission-message: You don't have permission to use this command
    calcvelocity:
-      description: Calculates velocities of all players.
+      description: Calculates velocities of all players
       usage: /<calcvelocity> [target-scoreboard] <multiplier>
       permission: klplugin.internalcmds
       permission-message: You don't have permission to use this command
    stockinfo:
-      description: Returns real life stock information.
-      usage: /<calcvelocity> <symbol>
+      description: Returns real life stock information
+      usage: /<stockinfo> <symbol>
       permission: klplugin.stocks.info
+      permission-message: You don't have permission to use this command
+   stocks:
+      description: Shows your owned stocks
+      usage: /<stocks>
+      permission: klplugin.stocks.trade
+      permission-message: You don't have permission to use this command
+   buystocks:
+      description: Buy stocks from the stock market
+      usage: /<buystocks> <symbol> <amount>
+      permission: klplugin.stocks.trade
+      permission-message: You don't have permission to use this command
+   sellstocks:
+      description: Sells stocks at index (get indexes using /stocks)
+      usage: /<sellstocks> <index>
+      permission: klplugin.stocks.trade
       permission-message: You don't have permission to use this command

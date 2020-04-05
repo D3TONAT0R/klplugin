@@ -1,5 +1,6 @@
 package com.d3t.klplugin;
 
+import java.io.File;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -10,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
+
+import com.d3t.klplugin.stocks.StockMarketHandler;
 
 import net.milkbowl.vault.economy.Economy;
 
@@ -50,6 +53,7 @@ public final class KLPlugin extends JavaPlugin {
 		tempOPs = new OperatorHandler();
 		getServer().getScheduler().runTaskTimer(this, new PluginLoop(), 20, 1);
 		getServer().getPluginManager().registerEvents(new CommandInterceptor(), this);
+		StockMarketHandler.load();
 	}
 
 	private boolean setupEconomy() {
@@ -66,6 +70,7 @@ public final class KLPlugin extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		StockMarketHandler.save();
 	}
 
 	@Override
@@ -73,8 +78,8 @@ public final class KLPlugin extends JavaPlugin {
 		return commandHandler.onCommand(sender, cmd, label, args);
 	}
 
-	public OfflinePlayer getOfflinePlayer(String name) {
-		for (OfflinePlayer p : getServer().getOfflinePlayers()) {
+	public static OfflinePlayer getOfflinePlayer(String name) {
+		for (OfflinePlayer p : INSTANCE.getServer().getOfflinePlayers()) {
 			if (p.getName().equalsIgnoreCase(name))
 				return p;
 		}
@@ -82,7 +87,11 @@ public final class KLPlugin extends JavaPlugin {
 		return null;
 	}
 
-	public Player toOnlinePlayer(OfflinePlayer offPlayer) {
-		return getServer().getPlayer(offPlayer.getUniqueId());
+	public static Player toOnlinePlayer(OfflinePlayer offPlayer) {
+		return INSTANCE.getServer().getPlayer(offPlayer.getUniqueId());
+	}
+	
+	public static File getDataFolderPath() {
+		return INSTANCE.getDataFolder();
 	}
 }
