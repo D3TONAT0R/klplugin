@@ -5,6 +5,7 @@ import org.patriques.AlphaVantageConnector;
 import org.patriques.TimeSeries;
 import org.patriques.input.timeseries.Interval;
 import org.patriques.input.timeseries.OutputSize;
+import org.patriques.output.AlphaVantageException;
 import org.patriques.output.timeseries.Daily;
 import org.patriques.output.timeseries.IntraDay;
 
@@ -22,7 +23,7 @@ public abstract class StockGetter implements Runnable {
 	public double yesterdayClose;
 
 	public StockGetter(String companySymbol, CommandSender sender) {
-		this.companySymbol = companySymbol;
+		this.companySymbol = companySymbol.toUpperCase();
 		this.sender = sender;
 		if (stockThread == null) {
 			stockThread = new Thread(this, "klplugin_stocks");
@@ -36,17 +37,17 @@ public abstract class StockGetter implements Runnable {
 				currentClose = 100;
 				yesterdayClose = 100;
 			} else {
+				if(!companySymbol.endsWith(".SW")) companySymbol += ".SW";
 				AlphaVantageConnector connector = new AlphaVantageConnector(APIKey, 5000);
 				TimeSeries stockTimeSeries = new TimeSeries(connector);
-				IntraDay intraDay = stockTimeSeries.intraDay(companySymbol, Interval.ONE_MIN, OutputSize.COMPACT);
+				IntraDay intraDay = stockTimeSeries.intraDay(companySymbol, Interval.FIFTEEN_MIN, OutputSize.COMPACT);
 				Daily daily = stockTimeSeries.daily(companySymbol, OutputSize.COMPACT);
 				currentClose = intraDay.getStockData().get(0).getClose()*stockValueToCurrencyMultiplier;
 				yesterdayClose = daily.getStockData().get(1).getClose()*stockValueToCurrencyMultiplier;
 			}
 			func();
-		} catch (Exception e) {
-			sender.sendMessage("Error!");
-			System.out.println("something went wrong");
+		} catch (AlphaVantageException e) {
+			sender.sendMessage("§cError: "+e.getMessage());
 			e.printStackTrace();
 		}
 	}

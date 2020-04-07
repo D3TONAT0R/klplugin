@@ -94,6 +94,7 @@ public class StockMarketHandler {
 			System.out.println("failed to save stocks list!");
 			e.printStackTrace();
 		}
+		CommonStockSymbols.save();
 	}
 
 	public static void load() {
@@ -108,8 +109,9 @@ public class StockMarketHandler {
 				purchasedStocks.put(KLPlugin.getOfflinePlayer(s), list);
 			}
 		} catch(Exception e) {
-			System.out.println("failed to save stocks list!");
+			System.out.println("failed to load stocks list!");
 			e.printStackTrace();
 		}
+		CommonStockSymbols.load();
 	}
 }

@@ -77,6 +77,10 @@ public final class KLPlugin extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		return commandHandler.onCommand(sender, cmd, label, args);
 	}
+	
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+		return commandHandler.onTabComplete(sender, cmd, alias, args);
+	}
 
 	public static OfflinePlayer getOfflinePlayer(String name) {
 		for (OfflinePlayer p : INSTANCE.getServer().getOfflinePlayers()) {

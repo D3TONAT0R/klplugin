@@ -1,17 +1,18 @@
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\RealEstateController.java
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\stocks\StockGetter.java
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\stocks\StockInfoJob.java
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\stocks\StockData.java
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\OperatorHandler.java
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\CommandCompleter.java
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\FileUtil.java
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\PVPCommands.java
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\PluginLoop.java
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\stocks\StockTradeJob.java
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\AntiCheatHandler.java
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\stocks\StockMarketHandler.java
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\TemperatureMechanic.java
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\KLPlugin.java
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\Scoreboards.java
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\CommandInterceptor.java
-C:\Users\gdv\eclipse-workspace\klplugin\src\main\java\com\d3t\klplugin\Commands.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\PVPCommands.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\PluginLoop.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\RealEstateController.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\TemperatureMechanic.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\Commands.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\stocks\StockData.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\stocks\StockInfoJob.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\stocks\StockMarketHandler.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\FileUtil.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\OperatorHandler.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\stocks\CommonStockSymbols.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\KLPlugin.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\CommandCompleter.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\stocks\StockGetter.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\CommandInterceptor.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\AntiCheatHandler.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\stocks\StockTradeJob.java
+C:\Users\Yanic Gottardi\Documents\GitHub\klplugin\src\main\java\com\d3t\klplugin\Scoreboards.java

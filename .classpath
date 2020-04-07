@@ -34,8 +34,8 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/gdv/eclipse-workspace/klplugin/dependencies/ActionBarAPI-1.5.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/gdv/eclipse-workspace/klplugin/dependencies/java-json.jar"/>
-	<classpathentry kind="lib" path="C:/Users/gdv/eclipse-workspace/klplugin/dependencies/StockAPI.jar"/>
+	<classpathentry kind="lib" path="dependencies/ActionBarAPI-1.5.4.jar"/>
+	<classpathentry kind="lib" path="dependencies/java-json.jar"/>
+	<classpathentry kind="lib" path="dependencies/StockAPI.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

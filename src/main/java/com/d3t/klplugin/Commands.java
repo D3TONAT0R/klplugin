@@ -1,5 +1,7 @@
 package com.d3t.klplugin;
 
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -12,6 +14,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.util.Vector;
 
+import com.d3t.klplugin.stocks.CommonStockSymbols;
 import com.d3t.klplugin.stocks.StockData;
 import com.d3t.klplugin.stocks.StockMarketHandler;
 
@@ -223,6 +226,14 @@ public class Commands {
 		return false;
 	}
 
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+		String c = cmd.getName();
+		if(c.equalsIgnoreCase("stockinfo") || c.equalsIgnoreCase("buystocks")) {
+			return CommonStockSymbols.commonSymbols;
+		}
+		return null;
+	}
+	
 	private void Pay(String playerName, double amount) {
 		OfflinePlayer player = KLPlugin.getOfflinePlayer(playerName);
 		if (player == null) {
@@ -231,7 +242,7 @@ public class Commands {
 		}
 		EconomyResponse r = KLPlugin.econ.depositPlayer(player, amount);
 		if (r.transactionSuccess()) {
-			// Transaction successfull!
+			// Transaction successful!
 		} else {
 			KLPlugin.log.warning("Failed to pay player!" + r.errorMessage);
 		}
