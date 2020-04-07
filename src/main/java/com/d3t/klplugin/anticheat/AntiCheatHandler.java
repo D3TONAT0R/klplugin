@@ -1,4 +1,4 @@
-package com.d3t.klplugin;
+package com.d3t.klplugin.anticheat;
 
 import org.bukkit.GameMode;
 import org.bukkit.GameRule;
@@ -16,6 +16,8 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import com.d3t.klplugin.KLPlugin;
 
 public class AntiCheatHandler {
 

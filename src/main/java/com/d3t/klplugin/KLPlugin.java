@@ -12,6 +12,10 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.d3t.klplugin.advancements.AdvancementEventListener;
+import com.d3t.klplugin.advancements.AdvancementHandler;
+import com.d3t.klplugin.anticheat.AntiCheatHandler;
+import com.d3t.klplugin.anticheat.CommandInterceptor;
 import com.d3t.klplugin.stocks.StockMarketHandler;
 
 import net.milkbowl.vault.economy.Economy;
@@ -33,6 +37,7 @@ public final class KLPlugin extends JavaPlugin {
 	public static AntiCheatHandler anticheat;
 	public static PVPCommands pvp;
 	public static OperatorHandler tempOPs;
+	public static AdvancementHandler advancements;
 
 	@Override
 	public void onEnable() {
@@ -51,6 +56,8 @@ public final class KLPlugin extends JavaPlugin {
 		anticheat = new AntiCheatHandler();
 		pvp = new PVPCommands();
 		tempOPs = new OperatorHandler();
+		advancements = new AdvancementHandler(getServer().getPluginManager());
+		getServer().getPluginManager().registerEvents(new AdvancementEventListener(), this);
 		getServer().getScheduler().runTaskTimer(this, new PluginLoop(), 20, 1);
 		getServer().getPluginManager().registerEvents(new CommandInterceptor(), this);
 		StockMarketHandler.load();

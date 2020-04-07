@@ -1,10 +1,12 @@
-package com.d3t.klplugin;
+package com.d3t.klplugin.anticheat;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
+
+import com.d3t.klplugin.KLPlugin;
 
 public class CommandInterceptor implements Listener {
 	
