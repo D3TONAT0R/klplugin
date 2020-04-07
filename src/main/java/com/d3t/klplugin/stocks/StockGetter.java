@@ -5,7 +5,6 @@ import org.patriques.AlphaVantageConnector;
 import org.patriques.TimeSeries;
 import org.patriques.input.timeseries.Interval;
 import org.patriques.input.timeseries.OutputSize;
-import org.patriques.output.AlphaVantageException;
 import org.patriques.output.timeseries.Daily;
 import org.patriques.output.timeseries.IntraDay;
 
@@ -46,7 +45,7 @@ public abstract class StockGetter implements Runnable {
 				yesterdayClose = daily.getStockData().get(1).getClose()*stockValueToCurrencyMultiplier;
 			}
 			func();
-		} catch (AlphaVantageException e) {
+		} catch (Exception e) {
 			sender.sendMessage("§cError: "+e.getMessage());
 			e.printStackTrace();
 		}

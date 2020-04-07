@@ -27,6 +27,8 @@ public class AdvancementHandler {
 	Advancement firstBlockSet;
 	
 	public AdvancementHandler(PluginManager pm) {
+		Player[] players = new Player[KLPlugin.INSTANCE.getServer().getOnlinePlayers().size()];
+		KLPlugin.INSTANCE.getServer().getOnlinePlayers().toArray(players);
 		manager = CrazyAdvancements.getNewAdvancementManager();
 		rootDisp = new AdvancementDisplay(new ItemStack(Material.STONE_BRICKS), "Server achievements", "Gotta get 'em all", AdvancementFrame.TASK, true, true, AdvancementVisibility.ALWAYS);
 		rootDisp.setBackgroundTexture("textures/block/stone_bricks.png");
@@ -36,6 +38,7 @@ public class AdvancementHandler {
 		for(Player p : KLPlugin.INSTANCE.getServer().getOnlinePlayers()) {
 			load(p);
 		}
+		System.out.println("Created server advancements!");
 	}
 	
 	private Advancement addAdvancement(ItemStack display, String title, String desc, Advancement parent, String childKey, float x, float y) {
@@ -51,6 +54,7 @@ public class AdvancementHandler {
 	
 	public void addPlayer(Player p) {
 		manager.addPlayer(p);
+		System.out.println("Added player");
 	}
 	
 	public void removePlayer(Player p) {

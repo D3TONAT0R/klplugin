@@ -57,7 +57,6 @@ public final class KLPlugin extends JavaPlugin {
 		pvp = new PVPCommands();
 		tempOPs = new OperatorHandler();
 		advancements = new AdvancementHandler(getServer().getPluginManager());
-		getServer().getPluginManager().registerEvents(new AdvancementEventListener(), this);
 		getServer().getScheduler().runTaskTimer(this, new PluginLoop(), 20, 1);
 		getServer().getPluginManager().registerEvents(new CommandInterceptor(), this);
 		StockMarketHandler.load();
