@@ -30,6 +30,6 @@ public class AdvancementEventListener implements Listener {
 	
 	@EventHandler
 	public void onPlaceBlock(BlockPlaceEvent event) {
-		adv.grantAdvancement(event.getPlayer(), adv.firstBlockSet);
+		if(event != null && event.getPlayer() != null && adv != null) adv.grantAdvancement(event.getPlayer(), adv.firstBlockSet);
 	}
 }
