@@ -15,8 +15,8 @@ import org.bukkit.scheduler.BukkitTask;
 
 import com.d3t.klplugin.advancements.AdvancementHandler;
 import com.d3t.klplugin.anticheat.AntiCheatHandler;
-import com.d3t.klplugin.anticheat.CommandInterceptor;
 import com.d3t.klplugin.anticheat.EconomyLogger;
+import com.d3t.klplugin.backup.BackupHandler;
 import com.d3t.klplugin.stocks.StockMarketHandler;
 
 import net.milkbowl.vault.economy.Economy;
@@ -46,7 +46,7 @@ public final class KLPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		INSTANCE = this;
-		log.info("test");
+		BackupHandler.CheckAndMakeBackup();
 		/*
 		 * for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 		 * playerList.add(player.getName()); }

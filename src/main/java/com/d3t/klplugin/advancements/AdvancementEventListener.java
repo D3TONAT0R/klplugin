@@ -1,5 +1,6 @@
 package com.d3t.klplugin.advancements;
 
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -18,8 +19,9 @@ public class AdvancementEventListener {
 		KLPlugin.advancements.save(event.getPlayer());
 	}
 	
+	@EventHandler
 	public static void onPlaceBlock(BlockPlaceEvent event) {
 		AdvancementHandler adv = KLPlugin.advancements;
-		if(event != null && event.getPlayer() != null) adv.grantAdvancement(event.getPlayer(), adv.firstBlockSet);
+		if(adv != null && event != null && event.getPlayer() != null) adv.grantAdvancement(event.getPlayer(), adv.firstBlockSet);
 	}
 }
