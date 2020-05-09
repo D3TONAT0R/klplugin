@@ -18,7 +18,7 @@ import com.d3t.klplugin.KLPlugin;
 
 public class BackupHandler {
 	
-	public static final DateTimeFormatter timestampFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
+	public static final DateTimeFormatter timestampFormat = DateTimeFormatter.ofPattern("yyyyMMdd");
 	
 	public static void CheckAndMakeBackup() {
 		try {
@@ -69,7 +69,7 @@ public class BackupHandler {
 	public static boolean CreateArchive(FileUtil file, String[] regions, String type) {
 		try {
 			String pathToRegions = file.GetString("PathToRegions");
-			String archiveName = LocalDateTime.now().format(timestampFormat)+"-"+type+".zip";
+			String archiveName = "backup-"+LocalDateTime.now().format(timestampFormat)+"-"+type+".bak";
 			File f = new File(Bukkit.getServer().getWorldContainer().getAbsolutePath()+"/backups/"+archiveName);
 			FileOutputStream output = new FileOutputStream(f);
 			ZipOutputStream zip = new ZipOutputStream(output);
