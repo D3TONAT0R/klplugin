@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -12,10 +13,10 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.d3t.klplugin.advancements.AdvancementEventListener;
 import com.d3t.klplugin.advancements.AdvancementHandler;
 import com.d3t.klplugin.anticheat.AntiCheatHandler;
 import com.d3t.klplugin.anticheat.CommandInterceptor;
+import com.d3t.klplugin.anticheat.EconomyLogger;
 import com.d3t.klplugin.stocks.StockMarketHandler;
 
 import net.milkbowl.vault.economy.Economy;
@@ -27,6 +28,7 @@ public final class KLPlugin extends JavaPlugin {
 	public static KLPlugin INSTANCE;
 	public static final Logger log = Logger.getLogger("Minecraft");
 	public static Economy econ = null;
+	public static EconomyLogger econLogger;
 	// private static Permission perms = null;
 	// private static Chat chat = null;
 
@@ -38,6 +40,8 @@ public final class KLPlugin extends JavaPlugin {
 	public static PVPCommands pvp;
 	public static OperatorHandler tempOPs;
 	public static AdvancementHandler advancements;
+	
+	public static World mainWorld;
 
 	@Override
 	public void onEnable() {
@@ -57,9 +61,14 @@ public final class KLPlugin extends JavaPlugin {
 		pvp = new PVPCommands();
 		tempOPs = new OperatorHandler();
 		advancements = new AdvancementHandler(getServer().getPluginManager());
-		getServer().getScheduler().runTaskTimer(this, new PluginLoop(), 20, 1);
-		getServer().getPluginManager().registerEvents(new CommandInterceptor(), this);
+		getServer().getScheduler().runTaskTimer(this, new PluginLoop(), 40, 1);
+		getServer().getPluginManager().registerEvents(new EventListener(), this);
 		StockMarketHandler.load();
+	}
+	
+	public void onPostEnable() {
+		mainWorld = getServer().getWorld("Kings_Landing");
+		econLogger = new EconomyLogger();
 	}
 
 	private boolean setupEconomy() {
@@ -103,5 +112,9 @@ public final class KLPlugin extends JavaPlugin {
 	
 	public static File getDataFolderPath() {
 		return INSTANCE.getDataFolder();
+	}
+	
+	public static long getTimeTicks() {
+		return INSTANCE.getServer().getWorld("Kings_Landing").getFullTime();
 	}
 }

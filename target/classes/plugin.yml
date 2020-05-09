@@ -1,8 +1,8 @@
 name: KLPlugin
 main: com.d3t.klplugin.KLPlugin
-version: 0.14
+version: 0.15
 api-version: 1.15
-softdepend: [Vault, ActionBarAPI, CrazyAdvancementsAPI]
+softdepend: [Essehtials, Vault, ActionBarAPI, CrazyAdvancementsAPI]
 
 permissions:
    klplugin.editimmoscores:
@@ -20,7 +20,12 @@ permissions:
 
 commands:
    payscoreboardvalue:
-      description: Pays a scoreboard value to a player.
+      description: Pays a scoreboard value to a player [OBSOLETE].
+      usage: /<payscoreboardvalue> [player] [scoreboard] [multiplier]
+      permission: klplugin.payscore
+      permission-message: You don't have permission to use this command
+   payimmoscores:
+      description: Pays the ImmoPunkte revenue to all online players.
       usage: /<payscoreboardvalue> [player] [scoreboard] [multiplier]
       permission: klplugin.payscore
       permission-message: You don't have permission to use this command
