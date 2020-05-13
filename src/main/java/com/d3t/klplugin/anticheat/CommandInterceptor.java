@@ -1,22 +1,17 @@
 package com.d3t.klplugin.anticheat;
 
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 
 import com.d3t.klplugin.KLPlugin;
 
-public class CommandInterceptor implements Listener {
+public class CommandInterceptor {
 	
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onCommandServer(ServerCommandEvent event) {
+	public static void onCommandServer(ServerCommandEvent event) {
 		KLPlugin.anticheat.onCommandServer(event);
 	}
 	
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onCommand(PlayerCommandPreprocessEvent event) {
+	public static void onCommand(PlayerCommandPreprocessEvent event) {
 		String cmd = event.getMessage().toLowerCase();
 		if(KLPlugin.tempOPs.isTemporaryOperator(event.getPlayer())) {
 			event.getPlayer().sendMessage("§cNo commands allowed in temporary operator mode!");
@@ -30,5 +25,4 @@ public class CommandInterceptor implements Listener {
 		}
 		KLPlugin.anticheat.onCommand(event, cmd);
 	}
-
 }

@@ -18,7 +18,7 @@ import com.d3t.klplugin.KLPlugin;
 
 public class BackupHandler {
 	
-	public static final DateTimeFormatter timestampFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
+	public static final DateTimeFormatter timestampFormat = DateTimeFormatter.ofPattern("yyyyMMdd");
 	
 	public static void CheckAndMakeBackup() {
 		try {

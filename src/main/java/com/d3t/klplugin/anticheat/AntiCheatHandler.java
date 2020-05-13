@@ -13,6 +13,8 @@ import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -36,7 +38,6 @@ public class AntiCheatHandler {
 	}
 	
 	public void update() {
-		//server.getLogger().info("hoi");
 		for(Player p : server.getOnlinePlayers()) {
 			if(!bypassAnticheat(p) && isWorldAnticheatEnabled(p.getWorld())) {
 				if(p.getGameMode() == GameMode.CREATIVE || p.getGameMode() == GameMode.SPECTATOR) {
@@ -46,8 +47,6 @@ public class AntiCheatHandler {
 				}
 				if(p.isOp()) {
 					p.setOp(false);
-					punishPlayer(p, 1);
-					annouceCheating(String.format("%s hat versucht sich zum operator zu machen!", p.getName()));
 				}
 			}
 		}
@@ -63,18 +62,23 @@ public class AntiCheatHandler {
 		if(bypassAnticheat(event.getPlayer())) return;
 		if(isWorldAnticheatEnabled(event.getPlayer().getWorld())) {
 			if(cmd.startsWith("/give")) {
-				punishPlayer(event.getPlayer(), 3);
+				punishPlayer(event.getPlayer(), 1);
 				annouceCheating(String.format("%s hat versucht den /give command auszuführen!", event.getPlayer().getName()));
 				event.setCancelled(true);
 			}
 			if(cmd.startsWith("/kill")) {
-				punishPlayer(event.getPlayer(), 4);
+				punishPlayer(event.getPlayer(), 2);
 				annouceCheating(String.format("%s hat versucht den /kill command auszuführen!", event.getPlayer().getName()));
 				event.setCancelled(true);
 			}
 			if(cmd.startsWith("/effect")) {
-				punishPlayer(event.getPlayer(), 1);
+				punishPlayer(event.getPlayer(), 0);
 				annouceCheating(String.format("%s hat versucht den /effect command auszuführen!", event.getPlayer().getName()));
+				event.setCancelled(true);
+			}
+			if(cmd.startsWith("/op")) {
+				punishPlayer(event.getPlayer(), 0);
+				annouceCheating(String.format("%s hat versucht sich zum operator zu machen!", event.getPlayer().getName()));
 				event.setCancelled(true);
 			}
 		}

@@ -36,15 +36,27 @@ public class Commands {
 		String c = cmd.getName();
 		parseError = false;
 		if(c.equalsIgnoreCase("payscoreboardvalue")) {
-			if(args.length == 3) {
-				String player = args[0];
-				String scoreboardObjective = args[1];
-				double multiplier = ParseDouble(args[2], sender);
-				if(!parseError) PayoutScoreboardValue(player, scoreboardObjective, multiplier);
-			} else {
-				ArgCountError(sender, args.length, 3);
+			if(sender instanceof Player) {
+				sender.sendMessage("§cVeralteter command!");
+			} else if(sender instanceof BlockCommandSender) {
+				BlockCommandSender cb = (BlockCommandSender)sender;
+				Location loc = cb.getBlock().getLocation();
+				server.broadcastMessage(String.format("§cVeralteter command in CommandBlock @ %s,%s,%s", loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
 			}
 			return true;
+		} else if(c.equalsIgnoreCase("payimmoscores")) {
+			if(!(sender instanceof BlockCommandSender)) {
+				sender.sendMessage("§cOnly a command block can run this command!");
+				return false;
+			} else {
+				if(args.length == 1) {
+					double multiplier = ParseDouble(args[0], sender);
+					if(!parseError) PayoutScoreboardValue((BlockCommandSender)sender, "ImmoPunkte", multiplier);
+				} else {
+					ArgCountError(sender, args.length, 3);
+				}
+				return true;
+			}
 		} else if(c.equalsIgnoreCase("listofflineplayers")) {
 			sender.sendMessage("§aLIST OF ALL OFFLINEPLAYERS:");
 			for (OfflinePlayer p : server.getOfflinePlayers()) {
@@ -234,8 +246,7 @@ public class Commands {
 		return null;
 	}
 	
-	private void Pay(String playerName, double amount) {
-		OfflinePlayer player = KLPlugin.getOfflinePlayer(playerName);
+	private void Pay(Player player, double amount) {
 		if (player == null) {
 			KLPlugin.log.info("Failed to get player!");
 			return;
@@ -287,8 +298,8 @@ public class Commands {
 			sender.sendMessage("§cThat's not how it works!");
 			return;
 		}
-		Score senderScore = getScoreObject(sender.getName(), Scoreboards.Extra);
-		Score receiverScore = getScoreObject(receiver.getName(), Scoreboards.Extra);
+		Score senderScore = getScoreObject(sender, Scoreboards.Extra);
+		Score receiverScore = getScoreObject(receiver, Scoreboards.Extra);
 		if (senderScore.getScore() < amount) {
 			sender.sendMessage("§cDu hast nicht genug Extra-Punkte!");
 			return;
@@ -316,13 +327,17 @@ public class Commands {
 		}
 	}
 
-	private boolean PayoutScoreboardValue(String player, String objective, double multiplier) {
+	private boolean PayoutScoreboardValue(BlockCommandSender sender, String objective, double multiplier) {
 		try {
-			int amount = getScoreObject(player, objective).getScore();
-			if (isOnline(player))
-				Pay(player, amount * multiplier);
+			for(Player p : server.getOnlinePlayers()) {
+				int amount = getScoreObject(p, objective).getScore();
+				amount *= multiplier;
+				KLPlugin.econLogger.onPayImmoPoints(p, sender, amount);
+				Pay(p, amount);
+			}
 		} catch (Exception e) {
 			KLPlugin.log.warning("Failed to get scoreboard value!");
+			e.printStackTrace();
 		}
 		return true;
 	}
@@ -360,8 +375,8 @@ public class Commands {
 		return sender instanceof Player;
 	}
 
-	private Score getScoreObject(String player, String scorename) {
-		return server.getScoreboardManager().getMainScoreboard().getObjective(scorename).getScore(player);
+	private Score getScoreObject(OfflinePlayer player, String scorename) {
+		return server.getScoreboardManager().getMainScoreboard().getObjective(scorename).getScore(player.getName());
 	}
 
 	private boolean isOnline(String player) {
