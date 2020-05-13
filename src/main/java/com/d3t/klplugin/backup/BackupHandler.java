@@ -69,7 +69,8 @@ public class BackupHandler {
 	public static boolean CreateArchive(FileUtil file, String[] regions, String type) {
 		try {
 			String pathToRegions = file.GetString("PathToRegions");
-			String archiveName = LocalDateTime.now().format(timestampFormat)+"-"+type+".zip";
+			String archiveName = LocalDateTime.now().format(timestampFormat)+"_"+type+".bak";
+			archiveName = archiveName.replace("-", "");
 			File f = new File(Bukkit.getServer().getWorldContainer().getAbsolutePath()+"/backups/"+archiveName);
 			FileOutputStream output = new FileOutputStream(f);
 			ZipOutputStream zip = new ZipOutputStream(output);
