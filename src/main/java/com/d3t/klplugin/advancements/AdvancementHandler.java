@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 
-import com.d3t.klplugin.EventListener;
 import com.d3t.klplugin.KLPlugin;
 
 import eu.endercentral.crazy_advancements.Advancement;
