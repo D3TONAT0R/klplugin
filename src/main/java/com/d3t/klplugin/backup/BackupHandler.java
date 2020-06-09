@@ -18,11 +18,12 @@ import com.d3t.klplugin.KLPlugin;
 
 public class BackupHandler {
 	
-	public static final DateTimeFormatter timestampFormat = DateTimeFormatter.ofPattern("yyyyMMdd");
+	public static DateTimeFormatter timestampFormat;
 	
 	public static void CheckAndMakeBackup() {
 		try {
 			FileUtil file = FileUtil.createFromFile(new File(KLPlugin.INSTANCE.getDataFolder()+"/backup.txt"));
+			timestampFormat = DateTimeFormatter.ofPattern(file.GetString("timestampFormat"));
 			LocalDateTime lastTimestamp = LocalDateTime.parse(file.GetString("LastBackupTimestamp"), timestampFormat);
 			Duration timespan = Duration.between(lastTimestamp, LocalDateTime.now());
 			if(Math.abs(timespan.toHours()) >= 23) {
@@ -72,6 +73,7 @@ public class BackupHandler {
 			String archiveName = LocalDateTime.now().format(timestampFormat)+"_"+type+".bak";
 			archiveName = archiveName.replace("-", "");
 			File f = new File(Bukkit.getServer().getWorldContainer().getAbsolutePath()+"/backups/"+archiveName);
+			f.getParentFile().mkdirs();
 			FileOutputStream output = new FileOutputStream(f);
 			ZipOutputStream zip = new ZipOutputStream(output);
 			for(String r : regions) {
