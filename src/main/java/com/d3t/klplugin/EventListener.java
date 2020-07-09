@@ -9,7 +9,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 
-import com.d3t.klplugin.advancements.AdvancementEventListener;
 import com.d3t.klplugin.anticheat.CommandInterceptor;
 
 public class EventListener implements Listener {
@@ -28,17 +27,17 @@ public class EventListener implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		KLPlugin.econLogger.registerPlayer(event.getPlayer());
-		AdvancementEventListener.onJoin(event);
+		//AdvancementEventListener.onJoin(event);
 	}
 	
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
 		KLPlugin.econLogger.unregisterPlayer(event.getPlayer());
-		AdvancementEventListener.onQuit(event);
+		//AdvancementEventListener.onQuit(event);
 	}
 	
 	@EventHandler
 	public void onPlaceBlock(BlockPlaceEvent event) {
-		AdvancementEventListener.onPlaceBlock(event);
+		//AdvancementEventListener.onPlaceBlock(event);
 	}
 }

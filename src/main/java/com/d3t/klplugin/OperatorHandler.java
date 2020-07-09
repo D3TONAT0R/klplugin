@@ -2,10 +2,13 @@ package com.d3t.klplugin;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-
-import com.connorlinfoot.actionbarapi.ActionBarAPI;
 
 public class OperatorHandler {
 
@@ -17,6 +20,8 @@ public class OperatorHandler {
 		Material.STRUCTURE_BLOCK,
 		Material.JIGSAW
 	};
+	
+	public static BossBar opDisplayBar;
 	
 	private ArrayList<Player> temporaryOps = new ArrayList<Player>();
 	
@@ -40,11 +45,23 @@ public class OperatorHandler {
 	private void setTemporaryOperatorStatus(Player p, boolean set) {
 		p.setOp(set);
 		if(set) {
-			ActionBarAPI.sendActionBar(p, "§bTemporärer Operator zugewiesen", 20);
 			temporaryOps.add(p);
 		} else {
-			ActionBarAPI.sendActionBar(p, "§cTemporärer Operator entfernt", 20);
 			temporaryOps.remove(p);
+		}
+		setDisplayOpGui(p, set);
+	}
+	
+	private void setDisplayOpGui(Player p, boolean display) {
+		if(opDisplayBar == null) {
+			//Initialize a new bossbar
+			opDisplayBar = Bukkit.getServer().createBossBar("§cTemporärer OP", BarColor.RED, BarStyle.SOLID, new BarFlag[0]);
+		}
+		opDisplayBar.setVisible(true);
+		if(display) {
+			opDisplayBar.addPlayer(p);
+		} else {
+			opDisplayBar.removePlayer(p);
 		}
 	}
 	

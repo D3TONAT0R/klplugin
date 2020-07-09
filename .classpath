@@ -36,7 +36,5 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="dependencies/ActionBarAPI-1.5.4.jar"/>
 	<classpathentry kind="lib" path="dependencies/java-json.jar"/>
-	<classpathentry kind="lib" path="dependencies/StockAPI.jar"/>
-	<classpathentry kind="lib" path="dependencies/CrazyAdvancementsAPI.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
