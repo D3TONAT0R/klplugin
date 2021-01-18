@@ -75,6 +75,7 @@ public class FileUtil {
 
 	public FileUtil() {
 		content = new LinkedHashMap<String, Object>();
+		hints = new LinkedHashMap<String, String>();
 	}
 
 	public boolean Save(String path, String fileName) {

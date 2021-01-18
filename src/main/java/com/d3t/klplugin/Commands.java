@@ -1,6 +1,7 @@
 package com.d3t.klplugin;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,6 +15,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.util.Vector;
 
+import com.d3t.klplugin.anticheat.AntiCheatConfig;
 import com.d3t.klplugin.stocks.CommonStockSymbols;
 import com.d3t.klplugin.stocks.StockData;
 import com.d3t.klplugin.stocks.StockMarketHandler;
@@ -35,7 +37,11 @@ public class Commands {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		String c = cmd.getName();
 		parseError = false;
-		if(c.equalsIgnoreCase("payscoreboardvalue")) {
+		if(c.equalsIgnoreCase("klpreload")) {
+			AntiCheatConfig.LoadConfig();
+			KLPlugin.log.log(Level.INFO, "Configs reloaded");
+			return true;
+		} else if(c.equalsIgnoreCase("payscoreboardvalue")) {
 			if(sender instanceof Player) {
 				sender.sendMessage("§cVeralteter command!");
 			} else if(sender instanceof BlockCommandSender) {

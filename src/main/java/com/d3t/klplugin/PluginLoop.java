@@ -37,7 +37,7 @@ public class PluginLoop implements Runnable {
 	}
 	
 	private void onSecondUpdate() {
-		if(second % 2 == 0) KLPlugin.tempHandler.onUpdate();
+		KLPlugin.tempHandler.onUpdate();
 		KLPlugin.anticheat.update();
 	}
 }

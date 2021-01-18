@@ -1,8 +1,8 @@
 name: KLPlugin
 main: com.d3t.klplugin.KLPlugin
-version: 1.0.0
+version: 1.1.0
 api-version: 1.16
-softdepend: [Essehtials, Vault, ActionBarAPI, CrazyAdvancementsAPI]
+softdepend: [Essentials, Vault, ActionBarAPI, CrazyAdvancementsAPI]
 
 permissions:
    klplugin.editimmoscores:
@@ -19,44 +19,48 @@ permissions:
       default: false 
 
 commands:
+   klpreload:
+      description: Reloads all configs for this plugin
+      usage: /<klpreload>
+      permission: klplugin.reload
    payscoreboardvalue:
-      description: Pays a scoreboard value to a player [OBSOLETE].
+      description: Pays a scoreboard value to a player [OBSOLETE]
       usage: /<payscoreboardvalue> [player] [scoreboard] [multiplier]
       permission: klplugin.payscore
    payimmoscores:
-      description: Pays the ImmoPunkte revenue to all online players.
+      description: Pays the current real estate (ImmoPunkte) revenue to all online players
       usage: /<payscoreboardvalue> [player] [scoreboard] [multiplier]
       permission: klplugin.payscore
    listofflineplayers:
-      description: Lists OfflinePlayers.
+      description: Lists OfflinePlayers
       usage: /<listofflineplayers>
       permission: klplugin.utility
    cmdblockop:
-      description: Changes OP status of a player (Command blocks only).
+      description: Changes OP status of a player (Command blocks only)
       usage: /<cmdblockop> [player] [true|false]
       permission: klplugin.cmdblock
    cmdblockgamerule:
-      description: Executes gamerule commands (Command blocks only).
+      description: Executes gamerule commands (Command blocks only)
       usage: /<cmdblockgamerule> [rule] [data] [pass]
       permission: klplugin.cmdblock
    giveimmopoints:
-      description: Gives Immo-Points to the specified player.
+      description: Gives Immo-Points to the specified player
       usage: /<giveimmopoints> [player] [immo-point-class] [amount]
       permission: klplugin.giveimmopoints
    tradeimmoep:
-      description: Gives Extra Immo-Points to another player.
+      description: Gives extra real estate points (Immo-E) to another player
       usage: /<giveimmopoint> [player] [amount]
       permission: klplugin.immotrade
    calcimmodemand:
-      description: Calculates demand rates for Immo-classes.
+      description: Calculates demand rates for real estate classes
       usage: /<calcimmodemand>
       permission: klplugin.calcdemand
    immostatus:
-      description: Shows demand and status of Immobilien
+      description: Shows demand and status of real estate
       usage: /<immostatus>
       permission: klplugin.immostatus
    modifyrate:
-      description: Modifies a immo rate
+      description: Modifies a real estate rate
       usage: /<modifyrate> [0-4] [0.5-2.0]
       permission: klplugin.immostatus
    pvpklasse:
@@ -73,7 +77,7 @@ commands:
       usage: /<pvptick>
       permission: klplugin.internalcmds
    applyloadouttoclass:
-      description: Copies the contents of a chest into all players of the specified class.
+      description: Applies loadout logic from the contents of a chest to all players of the specified class (pvptick command block required!)
       usage: /<applyloadouttoclass> [classID] [inventory X] [inventory Y] [inventory Z]
       permission: klplugin.internalcmds
    calcvelocity:

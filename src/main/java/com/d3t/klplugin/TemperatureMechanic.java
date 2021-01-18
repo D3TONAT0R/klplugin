@@ -14,6 +14,10 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Lightable;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -26,6 +30,8 @@ import org.bukkit.potion.PotionEffectType;
 
 public class TemperatureMechanic {
 
+	public static HashMap<UUID, BossBar> temperatureBars = new HashMap<UUID, BossBar>();
+	
 	public static final String tempScore = "temperature";
 	public static final String tempTimerScore = "temperatureTimer";
 	public static final String worldName = "glarus_winter";
@@ -41,6 +47,7 @@ public class TemperatureMechanic {
 	private Server server;
 
 	private double globalTemp;
+	private boolean evenTick = false;
 
 	private HashMap<UUID, Float> dic;
 
@@ -52,11 +59,17 @@ public class TemperatureMechanic {
 	}
 
 	public void onUpdate() {
+		evenTick = !evenTick;
 		calculateGlobalSources();
 		for (Player p : server.getOnlinePlayers()) {
 			if (!p.isDead() && p.getTicksLived() > 100 && p.getGameMode() == GameMode.SURVIVAL
 					&& p.getWorld().getName().equalsIgnoreCase(worldName)) {
-				// server.getLogger().info(p.getName() + " is in glarus!");
+				if(!temperatureBars.containsKey(p.getUniqueId())) {
+					temperatureBars.put(p.getUniqueId(), Bukkit.getServer().createBossBar("Temperatur: ", BarColor.BLUE, BarStyle.SOLID, new BarFlag[0]));
+					temperatureBars.get(p.getUniqueId()).addPlayer(p);
+				}
+				BossBar tempBar = temperatureBars.get(p.getUniqueId()); 
+						
 				float temp = calculateTemperatureAt(p.getLocation());
 				float insulation = getPlayerInsulation(p);
 				float finalTemp = temp + insulation;
@@ -64,7 +77,21 @@ public class TemperatureMechanic {
 				playertemp = lerp(playertemp, finalTemp, 0.3f);
 				setPlayerTemp(p, playertemp);
 				applyEffects(p, playertemp);
-
+				if(playertemp < 0) {
+					tempBar.setProgress(Math.min(1, Math.max(0, playertemp/4f+1)));
+					tempBar.setVisible(true);
+					tempBar.setTitle("Temperatur: "+Math.round(playertemp*10)/10.0);
+					BarColor color = BarColor.BLUE;
+					if(evenTick && playertemp < -2) {
+						color = BarColor.WHITE;
+					}
+					tempBar.setColor(color);
+				} else {
+					tempBar.setProgress(1);
+					tempBar.setTitle("Temperatur: 0");
+					tempBar.setVisible(false);
+				}
+				
 				// temporary debugging
 				ItemStack item = p.getInventory().getItemInMainHand();
 				if (item != null && item.getType() == Material.DEBUG_STICK) {
@@ -79,8 +106,18 @@ public class TemperatureMechanic {
 						p.sendMessage("globalcoldmul " + globalColdMul);
 					}
 				}
+			} else {
+				if(temperatureBars.containsKey(p.getUniqueId())) {
+					temperatureBars.get(p.getUniqueId()).removePlayer(p);
+				}
 			}
 		}
+		//Remove unused temp bars
+		/*for (UUID uuid : temperatureBars.keySet()) {
+			if(Bukkit.getServer().getPlayer(uuid) == null) {
+				temperatureBars.remove(uuid);
+			}
+		}*/
 	}
 	
 	private void createCraftingRecipes() {
@@ -128,22 +165,27 @@ public class TemperatureMechanic {
 
 	private void applyEffects(Player p, float playertemp) {
 		if (playertemp < -0.5f) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 200, 0), true);
+			setEffect(p, PotionEffectType.WEAKNESS, 10, 0);
 		}
 		if (playertemp < -1.5) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 0), true);
+			setEffect(p, PotionEffectType.SLOW, 5, 0);
 		}
 		if (playertemp < -2.5f) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 1), true);
-			p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 200, 1), true);
-			p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 200, 0), true);
+			setEffect(p, PotionEffectType.SLOW, 5, 1);
+			setEffect(p, PotionEffectType.WEAKNESS, 10, 1);
+			setEffect(p, PotionEffectType.SLOW_DIGGING, 10, 0);
 		}
 		if (playertemp <= -4f) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 2), true);
-			p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 200, 2), true);
-			p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 200, 1), true);
+			setEffect(p, PotionEffectType.SLOW, 5, 2);
+			setEffect(p, PotionEffectType.WEAKNESS, 10, 2);
+			setEffect(p, PotionEffectType.SLOW_DIGGING, 10, 1);
 			p.damage(Math.min((Math.abs(playertemp) - 3) / 2, 5));
 		}
+	}
+	
+	private void setEffect(Player p, PotionEffectType type, int seconds, int amplifier) {
+		p.removePotionEffect(type);
+		p.addPotionEffect(new PotionEffect(type, seconds*20, amplifier));
 	}
 
 	private float getPlayerTemp(Player p) {

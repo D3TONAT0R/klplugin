@@ -23,16 +23,11 @@ public class AntiCheatHandler {
 
 	Server server;
 	
-	private String[] protectedWorldNames;
-	
 	private static final String broadcastTitleLine = "§c§l[King's Landing AntiCheat]";
 	
 	public AntiCheatHandler() {
 		server = KLPlugin.INSTANCE.getServer();
-		protectedWorldNames = new String[] {
-			"glarus_winter",
-			"Survival"
-		};
+		AntiCheatConfig.LoadConfig();
 	}
 	
 	public void update() {
@@ -41,7 +36,7 @@ public class AntiCheatHandler {
 				if(p.getGameMode() == GameMode.CREATIVE || p.getGameMode() == GameMode.SPECTATOR) {
 					p.setGameMode(GameMode.SURVIVAL);
 					punishPlayer(p, 2);
-					annouceCheating(String.format("%s hat versucht in creative / spectator modus zu wechseln!", p.getName()));
+					annouceCheatingIfEnabled(String.format("%s hat versucht in creative / spectator modus zu wechseln!", p.getName()));
 				}
 				if(p.isOp()) {
 					p.setOp(false);
@@ -61,22 +56,22 @@ public class AntiCheatHandler {
 		if(isWorldAnticheatEnabled(event.getPlayer().getWorld())) {
 			if(cmd.startsWith("/give")) {
 				punishPlayer(event.getPlayer(), 1);
-				annouceCheating(String.format("%s hat versucht den /give command auszuführen!", event.getPlayer().getName()));
+				annouceCheatingIfEnabled(String.format("%s hat versucht den /give command auszuführen!", event.getPlayer().getName()));
 				event.setCancelled(true);
 			}
 			if(cmd.startsWith("/kill")) {
 				punishPlayer(event.getPlayer(), 2);
-				annouceCheating(String.format("%s hat versucht den /kill command auszuführen!", event.getPlayer().getName()));
+				annouceCheatingIfEnabled(String.format("%s hat versucht den /kill command auszuführen!", event.getPlayer().getName()));
 				event.setCancelled(true);
 			}
 			if(cmd.startsWith("/effect")) {
 				punishPlayer(event.getPlayer(), 0);
-				annouceCheating(String.format("%s hat versucht den /effect command auszuführen!", event.getPlayer().getName()));
+				annouceCheatingIfEnabled(String.format("%s hat versucht den /effect command auszuführen!", event.getPlayer().getName()));
 				event.setCancelled(true);
 			}
 			if(cmd.startsWith("/op")) {
 				punishPlayer(event.getPlayer(), 0);
-				annouceCheating(String.format("%s hat versucht sich zum operator zu machen!", event.getPlayer().getName()));
+				annouceCheatingIfEnabled(String.format("%s hat versucht sich zum operator zu machen!", event.getPlayer().getName()));
 				event.setCancelled(true);
 			}
 		}
@@ -99,7 +94,7 @@ public class AntiCheatHandler {
 					sender.sendMessage("Execution denied!");
 				} else {
 					server.getWorld("Kings_Landing").setGameRule(GameRule.DO_DAYLIGHT_CYCLE, s.split(" ")[2].toLowerCase().contains("true"));
-					sender.sendMessage("Execution successfull!");
+					sender.sendMessage("Execution successful!");
 				}
 			}
 		}
@@ -128,29 +123,42 @@ public class AntiCheatHandler {
 		return b;
 	}
 	
-	private void annouceCheating(String s) {
-		server.broadcastMessage(broadcastTitleLine);
-		server.broadcastMessage("§c"+s);
+	private void annouceCheatingIfEnabled(String s) {
+		if(AntiCheatConfig.announceCheating) {
+			server.broadcastMessage(broadcastTitleLine);
+			server.broadcastMessage("§c"+s);
+		}
 	}
 	
 	private void punishPlayer(Player p, int punishmentLevel) {
-		if(punishmentLevel <= 0) return;
+		int intensity = AntiCheatConfig.getPunishmentIntensity();
+		if(punishmentLevel <= 0 || intensity <= 0) return;
 		p.sendMessage("§oAntiCheat Strafe aktiviert!");
-		if(punishmentLevel == 1) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 200, 0), true);
-		} else if(punishmentLevel == 2) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 200, 1), true);
-		} else if(punishmentLevel == 3) {
-			p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 400, 2), true);
-		} else if(punishmentLevel >= 4) {
-			p.damage(1000);
+		if(intensity == 1) {
+			p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 200, 1));
+		} else if(intensity == 2) {
+			if(punishmentLevel == 1) {
+				p.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 200, 0));
+			} else if(punishmentLevel == 2) {
+				p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 200, 1));
+			} else if(punishmentLevel == 3) {
+				p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 400, 2));
+			} else if(punishmentLevel >= 4) {
+				p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 400, 3));
+			}
+		} else {
+			if(AntiCheatConfig.canKill()) {
+				p.damage(1000);
+			} else {
+				p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 400, 3));
+			}
 		}
 	}
 	
 	//Also includes nether and the end
 	public boolean isWorldAnticheatEnabled(World w) {
 		String n = w.getName();
-		for(String s : protectedWorldNames) {
+		for(String s : AntiCheatConfig.protectedWorlds) {
 			if(n.equalsIgnoreCase(s) || n.equalsIgnoreCase(s+"_nether") || n.equalsIgnoreCase(s+"_the_end")) {
 				return true;
 			}
