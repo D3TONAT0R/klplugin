@@ -22,7 +22,7 @@ public class BackupHandler {
 	
 	public static void CheckAndMakeBackup() {
 		try {
-			FileUtil file = FileUtil.createFromFile(new File(KLPlugin.INSTANCE.getDataFolder()+"/backup.txt"));
+			FileUtil file = FileUtil.createFromFile(new File(KLPlugin.INSTANCE.getDataFolder()+"/backup.cfg"));
 			timestampFormat = DateTimeFormatter.ofPattern(file.GetString("timestampFormat"));
 			LocalDateTime lastTimestamp = LocalDateTime.parse(file.GetString("LastBackupTimestamp"), timestampFormat);
 			Duration timespan = Duration.between(lastTimestamp, LocalDateTime.now());
@@ -63,7 +63,7 @@ public class BackupHandler {
 			num++;
 			file.SetValue("BackupNum", num);
 			file.SetValue("LastBackupTimestamp", LocalDateTime.now().format(timestampFormat));
-			file.Save("", "backup.txt");
+			file.Save("", "backup.cfg");
 		}
 	}
 	

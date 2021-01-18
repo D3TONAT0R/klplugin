@@ -11,18 +11,21 @@ import java.util.LinkedHashMap;
 public class FileUtil {
 
 	public static final String separator = "=";
+	public static final String commentMarker = "#";
+	
 	
 	public static final String arrayMark = "=>";
 	public static final String arrayIndent = "\t";
 	
 	public LinkedHashMap<String, Object> content;
+	public LinkedHashMap<String, String> hints;
 
 	public FileUtil(String[] fileContents) {
-		//if (fileContents[0].StartsWith("#")) title = fileContents[0].SubString(1); else Debug.LogError("File is not formatted correctly!");
 		content = new LinkedHashMap<String, Object>();
+		hints = new LinkedHashMap<String, String>();
 		for(String str : fileContents) str.replace("\r", ""); //Line ending cleanup
 		for(int ln = 0; ln < fileContents.length; ln++) {
-			if(!fileContents[ln].startsWith("#") && fileContents[ln].contains(separator)) {
+			if(!fileContents[ln].startsWith(commentMarker) && fileContents[ln].contains(separator)) {
 				//Is the current line an Array?
 				if(fileContents[ln].contains(arrayMark)) {
 					String valName = fileContents[ln].split(arrayMark)[0];
@@ -70,18 +73,6 @@ public class FileUtil {
 		return null;
 	}
 
-	public static FileUtil loadSection(String[] fileContents, String section) {
-		ArrayList<String> lines = new ArrayList<String>();
-		boolean b = false;
-		for(int i = 0; i < fileContents.length; i++) {
-			if (fileContents[i].startsWith("#")) b = fileContents[i].startsWith("#" + section);
-			if (b) lines.add(fileContents[i]);
-		}
-		String[] array = new String[0];
-		lines.toArray(array);
-		return new FileUtil(array);
-	}
-
 	public FileUtil() {
 		content = new LinkedHashMap<String, Object>();
 	}
@@ -91,6 +82,12 @@ public class FileUtil {
 		ArrayList<String> keys = new ArrayList<String>(content.keySet());
 		ArrayList<Object> values = new ArrayList<Object>(content.values());
 		for(int i = 0; i < keys.size(); i++) {
+			if(hints != null && hints.containsKey(keys.get(i))) {
+				String[] split = hints.get(keys.get(i)).split("\n");
+				for(String s : split) {
+					t += commentMarker+" "+s+"\n";
+				}
+			}
 			if(values.get(i) instanceof String[]) {
 				t += keys.get(i) + "=>\n";
 				for(int j = 0; j < ((String[])values.get(i)).length; j++) {
@@ -126,13 +123,27 @@ public class FileUtil {
 	}
 
 	public void SetValue(String name, Object value) {
+		SetValue(name, value, null);
+	}
+	
+	public void SetValue(String name, Object value, String hint) {
 		content.put(name, value);
+		if(hint != null && hint.length() > 0) {
+			hints.put(name, hint);
+		}
 	}
 	
 	public void SetArrayList(String name, ArrayList<String> value) {
+		SetArrayList(name, value, null);
+	}
+	
+	public void SetArrayList(String name, ArrayList<String> value, String hint) {
 		String[] array = new String[value.size()];
 		value.toArray(array);
 		content.put(name, array);
+		if(hint != null && hint.length() > 0) {
+			hints.put(name, hint);
+		}
 	}
 
 	public boolean GetBool(String name) {
