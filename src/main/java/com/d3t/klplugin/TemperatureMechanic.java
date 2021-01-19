@@ -30,10 +30,8 @@ import org.bukkit.potion.PotionEffectType;
 
 public class TemperatureMechanic {
 
-	public static HashMap<UUID, BossBar> temperatureBars = new HashMap<UUID, BossBar>();
 	
-	public static final String tempScore = "temperature";
-	public static final String tempTimerScore = "temperatureTimer";
+	public static HashMap<UUID, BossBar> temperatureBars = new HashMap<UUID, BossBar>();
 	public static final String worldName = "glarus_winter";
 	
 	final Material[] leatheritems = new Material[] {Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS};
