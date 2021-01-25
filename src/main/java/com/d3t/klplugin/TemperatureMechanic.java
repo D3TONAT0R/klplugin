@@ -30,16 +30,19 @@ import org.bukkit.potion.PotionEffectType;
 
 public class TemperatureMechanic {
 
-	
 	public static HashMap<UUID, BossBar> temperatureBars = new HashMap<UUID, BossBar>();
 	public static final String worldName = "glarus_winter";
-	
-	final Material[] leatheritems = new Material[] {Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS};
-	final Material[] ironitems = new Material[] {Material.IRON_HELMET, Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS, Material.IRON_BOOTS};
-	final Material[] golditems = new Material[] {Material.GOLDEN_HELMET, Material.GOLDEN_CHESTPLATE, Material.GOLDEN_LEGGINGS, Material.GOLDEN_BOOTS};
-	final Material[] diamonditems = new Material[] {Material.DIAMOND_HELMET, Material.DIAMOND_CHESTPLATE, Material.DIAMOND_LEGGINGS, Material.DIAMOND_BOOTS};
-	final String[] armorTypeNames = new String[] {"Helmet", "Chestplate", "Leggings", "Boots"};
-	final String[] armorTypeNamesLeather = new String[] {"Cap", "Tunic", "Pants", "Boots"};
+
+	final Material[] leatheritems = new Material[] { Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE,
+			Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS };
+	final Material[] ironitems = new Material[] { Material.IRON_HELMET, Material.IRON_CHESTPLATE,
+			Material.IRON_LEGGINGS, Material.IRON_BOOTS };
+	final Material[] golditems = new Material[] { Material.GOLDEN_HELMET, Material.GOLDEN_CHESTPLATE,
+			Material.GOLDEN_LEGGINGS, Material.GOLDEN_BOOTS };
+	final Material[] diamonditems = new Material[] { Material.DIAMOND_HELMET, Material.DIAMOND_CHESTPLATE,
+			Material.DIAMOND_LEGGINGS, Material.DIAMOND_BOOTS };
+	final String[] armorTypeNames = new String[] { "Helmet", "Chestplate", "Leggings", "Boots" };
+	final String[] armorTypeNamesLeather = new String[] { "Cap", "Tunic", "Pants", "Boots" };
 
 	private World world;
 	private Server server;
@@ -60,82 +63,98 @@ public class TemperatureMechanic {
 		evenTick = !evenTick;
 		calculateGlobalSources();
 		for (Player p : server.getOnlinePlayers()) {
-			if (!p.isDead() && p.getTicksLived() > 100 && p.getGameMode() == GameMode.SURVIVAL
+			if(p.isDead()) {
+				setPlayerTemp(p, 2);
+			}
+			if (!p.isDead() && p.getGameMode() == GameMode.SURVIVAL
 					&& p.getWorld().getName().equalsIgnoreCase(worldName)) {
-				if(!temperatureBars.containsKey(p.getUniqueId())) {
-					temperatureBars.put(p.getUniqueId(), Bukkit.getServer().createBossBar("Temperatur: ", BarColor.BLUE, BarStyle.SOLID, new BarFlag[0]));
-					temperatureBars.get(p.getUniqueId()).addPlayer(p);
-				}
-				BossBar tempBar = temperatureBars.get(p.getUniqueId()); 
-						
-				float temp = calculateTemperatureAt(p.getLocation());
-				float insulation = getPlayerInsulation(p);
-				float finalTemp = temp + insulation;
-				float playertemp = getPlayerTemp(p);
-				playertemp = lerp(playertemp, finalTemp, 0.3f);
-				setPlayerTemp(p, playertemp);
-				applyEffects(p, playertemp);
-				if(playertemp < 0) {
-					tempBar.setProgress(Math.min(1, Math.max(0, playertemp/4f+1)));
-					tempBar.setVisible(true);
-					tempBar.setTitle("Temperatur: "+Math.round(playertemp*10)/10.0);
-					BarColor color = BarColor.BLUE;
-					if(evenTick && playertemp < -2) {
-						color = BarColor.WHITE;
-					}
-					tempBar.setColor(color);
+				if (p.getTicksLived() < 200) {
+					setPlayerTemp(p, 2);
+					//This doesn't work?
 				} else {
-					tempBar.setProgress(1);
-					tempBar.setTitle("Temperatur: 0");
-					tempBar.setVisible(false);
-				}
-				
-				// temporary debugging
-				ItemStack item = p.getInventory().getItemInMainHand();
-				if (item != null && item.getType() == Material.DEBUG_STICK) {
-					p.sendMessage(String.format("Src: %s   You: %s   Ins: %s", Math.round(temp * 10f) / 10f,
-							Math.round(playertemp * 10f) / 10f, Math.round(insulation * 10f) / 10f));
-					if (p.isSneaking()) {
-						p.sendMessage("heat " + heat);
-						p.sendMessage("cold " + cold);
-						p.sendMessage("envMultiplier " + envMultiplier);
-						p.sendMessage("envsrc " + envsrc);
-						p.sendMessage("heightsrc " + heightsrc);
-						p.sendMessage("globalcoldmul " + globalColdMul);
+					if (!temperatureBars.containsKey(p.getUniqueId())) {
+						temperatureBars.put(p.getUniqueId(), Bukkit.getServer().createBossBar("Temperatur: ",
+								BarColor.BLUE, BarStyle.SOLID, new BarFlag[0]));
+						temperatureBars.get(p.getUniqueId()).addPlayer(p);
+					}
+					BossBar tempBar = temperatureBars.get(p.getUniqueId());
+
+					boolean debug = false;
+					ItemStack item = p.getInventory().getItemInMainHand();
+					if (item != null && item.getType() == Material.DEBUG_STICK) {
+						debug = true;
+					}
+
+					float temp = calculateTemperatureAt(p.getLocation());
+					float insulation = getPlayerInsulation(p);
+					float finalTemp = temp + insulation;
+					float playertemp = getPlayerTemp(p);
+					playertemp = lerp(playertemp, finalTemp, 0.05f);
+					setPlayerTemp(p, playertemp);
+					applyEffects(p, playertemp);
+					if (playertemp < 0 || finalTemp < 0) {
+						if (tempBar.getPlayers().size() == 0)
+							tempBar.addPlayer(p);
+						tempBar.setProgress(Math.min(1, Math.max(0, playertemp / 4f + 1)));
+						tempBar.setVisible(true);
+						tempBar.setTitle("Temperatur: " + Math.round(playertemp * 10) / 10.0);
+						BarColor color = BarColor.BLUE;
+						if (evenTick && playertemp < -2) {
+							color = BarColor.WHITE;
+						}
+						tempBar.setColor(color);
+					} else {
+						tempBar.setProgress(1);
+						tempBar.setTitle("Temperatur: 0");
+						tempBar.setVisible(false);
+					}
+
+					// temporary debugging
+					if (debug) {
+						p.sendMessage(String.format("Src: %s   You: %s   Ins: %s", Math.round(temp * 10f) / 10f,
+								Math.round(playertemp * 10f) / 10f, Math.round(insulation * 10f) / 10f));
+						if (p.isSneaking()) {
+							p.sendMessage("heat " + heat);
+							p.sendMessage("cold " + cold);
+							p.sendMessage("envMultiplier " + envMultiplier);
+							p.sendMessage("envsrc " + envsrc);
+							p.sendMessage("heightsrc " + heightsrc);
+							p.sendMessage("globalcoldmul " + globalColdMul);
+						}
 					}
 				}
 			} else {
-				if(temperatureBars.containsKey(p.getUniqueId())) {
+				if (temperatureBars.containsKey(p.getUniqueId())) {
 					temperatureBars.get(p.getUniqueId()).removePlayer(p);
 				}
 			}
 		}
-		//Remove unused temp bars
-		/*for (UUID uuid : temperatureBars.keySet()) {
-			if(Bukkit.getServer().getPlayer(uuid) == null) {
-				temperatureBars.remove(uuid);
-			}
-		}*/
+		// Remove unused temp bars
+		/*
+		 * for (UUID uuid : temperatureBars.keySet()) {
+		 * if(Bukkit.getServer().getPlayer(uuid) == null) {
+		 * temperatureBars.remove(uuid); } }
+		 */
 	}
-	
+
 	private void createCraftingRecipes() {
-		for(int i = 0; i < 4; i++) {
-			NamespacedKey key = new NamespacedKey(KLPlugin.INSTANCE, "armor_wool_"+i);
+		for (int i = 0; i < 4; i++) {
+			NamespacedKey key = new NamespacedKey(KLPlugin.INSTANCE, "armor_wool_" + i);
 			ItemStack result = new ItemStack(leatheritems[i], 1);
-			LeatherArmorMeta meta = (LeatherArmorMeta)result.getItemMeta();
+			LeatherArmorMeta meta = (LeatherArmorMeta) result.getItemMeta();
 			meta.setCustomModelData(1);
-			meta.setDisplayName("Wool "+armorTypeNamesLeather[i]);
+			meta.setDisplayName("Wool " + armorTypeNamesLeather[i]);
 			meta.setColor(Color.WHITE);
 			result.setItemMeta(meta);
 			ShapedRecipe r = new ShapedRecipe(key, result);
-			if(i == 0) {
-				r.shape("xxx","x x","   ");
-			} else if(i == 1) {
-				r.shape("x x","xxx","xxx");
-			} else if(i == 2) {
-				r.shape("xxx","x x","x x");
-			} else if(i == 3) {
-				r.shape("   ","x x","x x");
+			if (i == 0) {
+				r.shape("xxx", "x x", "   ");
+			} else if (i == 1) {
+				r.shape("x x", "xxx", "xxx");
+			} else if (i == 2) {
+				r.shape("xxx", "x x", "x x");
+			} else if (i == 3) {
+				r.shape("   ", "x x", "x x");
 			}
 			r.setIngredient('x', Material.WHITE_WOOL);
 			Bukkit.addRecipe(r);
@@ -144,15 +163,15 @@ public class TemperatureMechanic {
 		createCombinedRecipes(golditems, "Golden");
 		createCombinedRecipes(diamonditems, "Diamond");
 	}
-	
+
 	private void createCombinedRecipes(Material[] items, String name) {
 		String nname = name.toLowerCase();
-		for(int i = 0; i < 4; i++) {
-			NamespacedKey key = new NamespacedKey(KLPlugin.INSTANCE, "armor_"+nname+"_"+i);
+		for (int i = 0; i < 4; i++) {
+			NamespacedKey key = new NamespacedKey(KLPlugin.INSTANCE, "armor_" + nname + "_" + i);
 			ItemStack result = new ItemStack(items[i], 1);
 			ItemMeta meta = result.getItemMeta();
 			meta.setCustomModelData(1);
-			meta.setDisplayName("§bArctic "+name+" "+armorTypeNames[i]);
+			meta.setDisplayName("§bArctic " + name + " " + armorTypeNames[i]);
 			result.setItemMeta(meta);
 			ShapelessRecipe r = new ShapelessRecipe(key, result);
 			r.addIngredient(leatheritems[i]);
@@ -180,10 +199,10 @@ public class TemperatureMechanic {
 			p.damage(Math.min((Math.abs(playertemp) - 3) / 2, 5));
 		}
 	}
-	
+
 	private void setEffect(Player p, PotionEffectType type, int seconds, int amplifier) {
 		p.removePotionEffect(type);
-		p.addPotionEffect(new PotionEffect(type, seconds*20, amplifier));
+		p.addPotionEffect(new PotionEffect(type, seconds * 20, amplifier));
 	}
 
 	private float getPlayerTemp(Player p) {
@@ -201,21 +220,25 @@ public class TemperatureMechanic {
 		float mul = 0.8f;
 		float insulation = 0;
 		PlayerInventory inv = p.getInventory();
-		
-		//0 Boot, 1 Leggings, 2 Chestplate, 3 Helmet 
+
+		// 0 Boot, 1 Leggings, 2 Chestplate, 3 Helmet
 		ItemStack[] armor = inv.getArmorContents();
-		
+
 		boolean insulatedArmor[] = new boolean[4];
-		
-		for(int i = 0; i < 4; i++) {
-			if(armor[i] != null) {
-				if(armor[i].getType() == leatheritems[3-i]) insulatedArmor[i] = true;
-				else if(armor[i].getItemMeta().hasCustomModelData() && armor[i].getItemMeta().getCustomModelData() == 1) insulatedArmor[i] = true;
-				else insulatedArmor[i] = false;
+
+		for (int i = 0; i < 4; i++) {
+			if (armor[i] != null) {
+				if (armor[i].getType() == leatheritems[3 - i])
+					insulatedArmor[i] = true;
+				else if (armor[i].getItemMeta().hasCustomModelData()
+						&& armor[i].getItemMeta().getCustomModelData() == 1)
+					insulatedArmor[i] = true;
+				else
+					insulatedArmor[i] = false;
 			}
 		}
-	
-		//top-to-bottom
+
+		// top-to-bottom
 		if (insulatedArmor[3])
 			insulation += 5 * mul;
 		if (insulatedArmor[2])
@@ -224,7 +247,7 @@ public class TemperatureMechanic {
 			insulation += 7 * mul;
 		if (insulatedArmor[0])
 			insulation += 4 * mul;
-		
+
 		return insulation;
 	}
 
