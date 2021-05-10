@@ -41,7 +41,7 @@ public class BuildCostHandler {
 	private void loadConfig() {
 		baseBlockCosts = new HashMap<String, Float>();
 		regions = new ArrayList<BuildCostSet>();
-		File filePath = new File(KLPlugin.INSTANCE.getDataFolder() + "/buildcosts.cfg");
+		File filePath = new File(KLPlugin.INSTANCE.getDataFolder() + "/blockeconomy/buildcosts.cfg");
 		if (filePath.exists()) {
 			FileUtil file = FileUtil.createFromFile(filePath);
 			try {
@@ -107,13 +107,13 @@ public class BuildCostHandler {
 		file.Save("", "anticheat.cfg");
 	}
 	
-	public void chargePlayerForBlockPlacement(Player p, Vector loc, String block, boolean isWorldEdit) {
+	public void applyBlockPlacementCost(Player p, Vector loc, String block, boolean isWorldEdit) {
 		float amount = getCostForBlock(loc, block, isWorldEdit);
 		EconomyResponse r = KLPlugin.econ.withdrawPlayer(p, amount);
 		if (r.transactionSuccess()) {
 			// Transaction successful!
 		} else {
-			KLPlugin.log.warning("Failed to withdraw from player!" + r.errorMessage);
+			KLPlugin.log.warning("Failed to withdraw from player! " + r.errorMessage);
 		}
 	}
 	

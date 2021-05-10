@@ -8,4 +8,7 @@ import com.d3t.klplugin.FileUtil;
 import com.d3t.klplugin.KLPlugin;
 
 public class EconomyConfiguration {
+	
+	public static final String worldName = "KingsLanding";
+	
 }

@@ -30,7 +30,7 @@ public class WorldEditEvents extends AbstractDelegateExtent {
 	public boolean setBlock(BlockVector3 location, BlockStateHolder block) throws WorldEditException {
 		if(player != null) {
 			Vector vector = new Vector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-			BuildCostHandler.INSTANCE.chargePlayerForBlockPlacement(player, vector, block.getBlockType().getId(), true);
+			BuildCostHandler.INSTANCE.applyBlockPlacementCost(player, vector, block.getBlockType().getId(), true);
 		}
 		return super.setBlock(location, block);
 	}

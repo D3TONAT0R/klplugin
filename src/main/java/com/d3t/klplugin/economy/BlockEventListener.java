@@ -19,7 +19,7 @@ public class BlockEventListener implements Listener {
 	public void onBlockPlaced(BlockPlaceEvent event) {
 		if(event.getPlayer() != null) {
 			Block block = event.getBlockPlaced();
-			BuildCostHandler.INSTANCE.chargePlayerForBlockPlacement(event.getPlayer(), block.getLocation().toVector(), getID(block.getBlockData()), false);
+			BuildCostHandler.INSTANCE.applyBlockPlacementCost(event.getPlayer(), block.getLocation().toVector(), getID(block.getBlockData()), false);
 		}
 	}
 	
